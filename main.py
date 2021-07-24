@@ -23,15 +23,15 @@ def take_command():
             voice = listener.listen(source)
             command = listener.recognize_google(voice)
             command = command.lower()
-            if 'alexa' in command:
-                command = command.replace('alexa', '')
+            if 'Rossie' in command:
+                command = command.replace('Rossie', '')
                 print(command)
     except:
         pass
     return command
 
 
-def run_alexa():
+def run_Rossie():
     command = take_command()
     print(command)
     if 'play' in command:
@@ -49,7 +49,7 @@ def run_alexa():
     elif 'date' in command:
         talk('sorry, I have a headache')
     elif 'are you single' in command:
-        talk('I am in a relationship with amey')
+        talk('I am in a relationship with wifi')
     elif 'joke' in command:
         talk(pyjokes.get_joke())
     else:
@@ -57,4 +57,4 @@ def run_alexa():
 
 
 while True:
-    run_alexa()
+    run_Rossie()
