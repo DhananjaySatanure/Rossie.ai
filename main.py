@@ -4,6 +4,8 @@ import pywhatkit
 import datetime
 import wikipedia
 import pyjokes
+import smtplib
+
 
 listener = sr.Recognizer()
 engine = pyttsx3.init()
@@ -38,6 +40,14 @@ def run_Rossie():
         song = command.replace('play', '')
         talk('playing ' + song)
         pywhatkit.playonyt(song)
+ def sendEmail(to, content):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.login('youremail@gmail.com', 'your-password')
+    server.sendmail('youremail@gmail.com', to, content)
+    server.close()
+    
     elif 'time' in command:
         time = datetime.datetime.now().strftime('%I:%M %p')
         talk('Current time is ' + time)
@@ -46,6 +56,16 @@ def run_Rossie():
         info = wikipedia.summary(person, 1)
         print(info)
         talk(info)
+    elif 'email to amey' in query:
+            try:
+                speak("What should I say?")
+                content = takeCommand()
+                to = "ameyyourEmail@gmail.com"    
+                sendEmail(to, content)
+                speak("Email has been sent!")
+            except Exception as e:
+                print(e)
+                speak("Sorry my friend amey. I am not able to send this email")
     elif 'date' in command:
         talk('sorry, I have a headache')
     elif 'are you single' in command:
