@@ -201,12 +201,11 @@ if __name__ == "__main__":
             insta_id = input("Enter Instagram ID here: ")
             webbrowser.open(f"www.instagram.com/{insta_id}")
             speak(f"Here is the instagram profile of user {insta_id}")
-            time.sleep(5)
             speak(f"Do you Like to Download Profile Picture of this Instagram Account?")
             condition = takeCommand().lower()
             if 'yes' in condition:
                 mod = instaloader.Instaloader()
-                mod.download_profile(name, profile_pic_only=True)
+                mod.download_profile(insta_id, profile_pic_only=True)
                 speak("Vola! It's done. I stored it in our Main Folder")
             else:
                 pass
