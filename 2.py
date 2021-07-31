@@ -120,6 +120,10 @@ if __name__ == "__main__":
             notepad_dir = 'C:\\Windows\\System32\\notepad.exe'
             os.startfile(notepad_dir)
 
+        elif 'close notepad' in query:
+            speak("Okay dear, I'll Close Notepad")
+            os.system("taskkill /f /im notepad.exe")
+
         elif 'open google' in query:
             webbrowser.open("google.com")
         
