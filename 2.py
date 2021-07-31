@@ -1,3 +1,6 @@
+import json
+import requests
+from pywhatkit import main
 import wikipedia
 import pyttsx3
 import speech_recognition as sr
@@ -9,10 +12,11 @@ import pyjokes
 import pywhatkit as kit
 import random
 import sys
+import instaloader
+import pyautogui
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-# print(voices[1].id)
 engine.setProperty('voice', voices[1].id)
 
 
@@ -20,7 +24,6 @@ def speak(audio):
     engine.say(audio)
     print(audio)
     engine.runAndWait()
-
 
 def wishMe():
     hour = int(datetime.datetime.now().hour)
@@ -61,6 +64,22 @@ def sendEmail(to, content):
     server.sendmail('notabletoday@gmail.com', to, content)
     server.close()
 
+########################################################################################
+
+def news():
+    main_url = 'https://newsapi.org/v2/top-headlines?country=in&apiKey=0e1d349cb47a4d0b9abca754ac83b595'
+
+    main_page = requests.get(main_url).json()
+    articles = main_page ["articles"]
+
+    head = []
+    day = ["first","second","third","fourth","fifth","sixth","seventh","eighth","tenth"]
+    for ar in articles:
+        head.append(ar["title"])
+    for i in range (len(day)):
+        speak(f"Today's, {day[1]} news is {head[1]}")
+
+########################################################################################
 
 if __name__ == "__main__":
     wishMe()
@@ -74,6 +93,7 @@ if __name__ == "__main__":
             speak("According to Wikipedia")
             print(results)
             speak(results)
+        
         elif 'send email' in query:
             try:  
                 speak("What should I say?")
@@ -120,17 +140,12 @@ if __name__ == "__main__":
             notepad_dir = 'C:\\Windows\\System32\\notepad.exe'
             os.startfile(notepad_dir)
 
-        elif 'close notepad' in query:
-            speak("Okay dear, I'll Close Notepad")
-            os.system("taskkill /f /im notepad.exe")
-
-        elif 'open google' in query:
+        elif 'open browser' in query:
             webbrowser.open("google.com")
         
         elif 'joke' in query:
             print(pyjokes.get_joke())
             speak(pyjokes.get_joke())
-            
 
         elif 'open stackoverflow' in query:
             webbrowser.open("stackoverflow.com")
@@ -145,7 +160,6 @@ if __name__ == "__main__":
             rd = random.choice(songs)
             os.startfile(os.path.join(music_dir, rd))
 
-
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")    
             speak(f"Sir, the time is {strTime}")
@@ -158,4 +172,70 @@ if __name__ == "__main__":
             speak("Okay dear, Thanks for Using me. Good Bye!")
             sys.exit()
 
-        speak("okay, dear do you have any other Work?")
+############################################################################################
+
+        elif 'close notepad' in query:
+            speak("Okay dear, I'll Close Notepad")
+            os.system("taskkill /f /im notepad.exe")
+
+        elif 'news' in query:
+            speak("Please wait for a while, as I'll fetch Latest News for you.")
+            news()
+
+        elif 'my location' in query or 'where i m' in query:
+            speak("Okay Dear, Let me Check...")
+            try:
+                ipAdd = requests.get('https://api.ipify.org').text
+                url = 'https://get.geojs.io/v1/ip/geo/'+ipAdd+'.json'
+                geo_requests = requests.get(url)
+                geo_data = geo_requests.json()
+                city = geo_data['city']
+                state = geo_data['state']
+                country = geo_data['country']
+                speak(f"I'm not Sure, but according to your IP Address, we are in {city} city, {state} state, of {country} country")
+            except Exception as e:
+                speak(f"Oops! Something Went wrong. I'm unable to find your Location in Meantime.")
+
+        elif 'search profile on instagram' in query or 'instagram profile' in query:
+            speak("Please Enter Username of Profile")
+            insta_id = input("Enter Instagram ID here: ")
+            webbrowser.open(f"www.instagram.com/{insta_id}")
+            speak(f"Here is the instagram profile of user {insta_id}")
+            time.sleep(5)
+            speak(f"Do you Like to Download Profile Picture of this Instagram Account?")
+            condition = takeCommand().lower()
+            if 'yes' in condition:
+                mod = instaloader.Instaloader()
+                mod.download_profile(name, profile_pic_only=True)
+                speak("Vola! It's done. I stored it in our Main Folder")
+            else:
+                pass
+        
+        elif 'screenshot' in query:
+            speak(f"Please tell me the name you would like to give for this Screenshot")
+            ss_n = takeCommand().lower()
+            speak(f"Great! Please Hold the screen for Few seconds, I'm taking the screenshot")
+            img = pyautogui.screenshot()
+            img.save(f"{ss_n}.jpg")
+            speak(f"I'm done dear, Screenshot is Saved in Main Folder.")
+
+        '''elif 'calculate' in query:
+            r = sr.Recognizer()
+            with sr.Microphone() as source:
+                speak(f"What you want to calculate? Say like: 2 plus 2")
+                print("Listening...")
+                r.adjust_for_ambient_noise(source)
+                audio = r.listen(source)
+            my_string = r.recognize_google(audio)
+            print(my_string)
+            def get_operator_fn(op):
+                return {
+                    '+' : operator.add
+                    '-' : operator.sub
+
+                }'''
+
+        
+
+############################################################################################
+        speak("Anything other I can do for you?")
