@@ -5,6 +5,9 @@ import wikipedia
 import webbrowser
 import os
 import smtplib
+import random
+import pywhatkit as kit
+import sys
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -40,7 +43,7 @@ def takeCommand():
     try:
         print("Recognizing...")    
         query = r.recognize_google(audio, language='en-in')
-        print(f"User said: {query}\n")
+        print(f"User: {query}\n")
 
     except Exception as e:    
         print("Say that again please...")  
@@ -68,31 +71,52 @@ if __name__ == "__main__":
             print(results)
             speak(results)
 
-        elif 'open youtube' in query:
+        elif 'open YouTube' in query:
             webbrowser.open("youtube.com")
 
-        elif 'open google' in query:
-            webbrowser.open("google.com")
+        elif 'open Google' in query:
+            speak("Sir, What should I search on Google?")
+            cm = takeCommand().lower()
+            webbrowser.open(f"{cm}")
 
         elif 'open Microsoft' in query:
             webbrowser.open("microsoft.com")
 
+        elif 'open whatsapp' in query:
+            webbrowser.open("youtube.com")
+
+        elif 'Send WhatsApp Message' in query:
+            kit.sendwhatmsg("+918421565366", "Hello! This is Test Message.",2,25)
+
         elif 'open stackoverflow' in query:
-            webbrowser.open("stackoverflow.com")   
+            webbrowser.open("stackoverflow.com")
 
+        elif 'play song on youtube' in query:
+            speak("Which Song do you like to play?")
+            yts = takeCommand().lower()
+            kit.playonyt(f"{yts}")
 
-        elif 'play music' in query:
+        elif 'open notepad' in query:
+            notepad_dir = 'C:\\Windows\\System32\\notepad.exe'
+            os.startfile(notepad_dir)
+
+        elif 'open mycomputer' in query:
+            comp_dir = 'C:\\Users\\Dhananjay\\Desktop'
+            os.startfile(comp_dir)
+ 
+        elif 'play songs from my Local Computer' in query:
             music_dir = 'D:\\Non Critical\\songs\\Favorite Songs2'
             songs = os.listdir(music_dir)
-            print(songs)    
-            os.startfile(os.path.join(music_dir, songs[0]))
+            print(songs)
+            rd = random.choice(songs)
+            os.startfile(os.path.join(music_dir, rd))
 
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")    
             speak("Sir, the time is {strTime}")
 
         elif 'open code' in query:
-            codePath = "C:\\Users\\Haris\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+            codePath = " "
             os.startfile(codePath)
 
         elif 'email to amey' in query:
@@ -105,3 +129,9 @@ if __name__ == "__main__":
             except Exception as e:
                 print(e)
                 speak("Hello Dear! I am not able to send this email")
+
+        elif 'stop listening' in query:
+            speak("Okay Sir, Thanks for Using me. Good Bye!")
+            sys.exit()
+
+        speak("Sir, DO you have any other Work?")
