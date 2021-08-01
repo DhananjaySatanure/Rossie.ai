@@ -1,6 +1,7 @@
 import json
 import requests
 from pywhatkit import main
+from requests.models import Response
 import wikipedia
 import pyttsx3
 import speech_recognition as sr
@@ -19,7 +20,6 @@ from bs4 import BeautifulSoup
 from wikipedia.wikipedia import search
 import pywikihow
 from pywikihow import search_wikihow
-import twilio
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -85,6 +85,16 @@ def news():
         head.append(ar["title"])
     for i in range (len(day)):
         speak(f"Today's, {day[i]} news is {head[i]}")
+
+def Temperature():
+    city = query.split("in", 1)
+    soup = BeautifulSoup(requests.get(f"https://google.co.in/search?q=weather+in+{city[1]}").text, "html.parser")
+    region = soup.find("span", class_="BNeawe tAd8D AP7Wnd")
+    temp = soup.find("div", class_="BNeawe iBp4i AP7Wnd")
+    day = soup.find("div", class_="BNeawe tAd8D AP7Wnd")
+    weather = day.text.split("m", 1)
+    temperature = temp.text.split("C", 1)
+    Response("Its Currently "+weather[1]+" and "+temperature[0]+" Celcius in "+region.text)
 
 ##################EEEEENNNNNDDDDDDDDD#####################################
 
@@ -249,14 +259,17 @@ if __name__ == "__main__":
             speak("The Result is: ")
             speak(eval_binary_expr(*(my_string.split())))
 
+        # elif 'temperature' in query:
+        #     speak("Of which City?")
+        #     city_name = takeCommand().lower()
+        #     search = 'https://www.google.co.in/search?q={city_name}'
+        #     r = requests.get(url)
+        #     data = BeautifulSoup(r.text,"html.parser")
+        #     temp = data.find("div",class_="BNeawe").text
+        #     speak(f"Current Temperature in {city_name} is {temp}")
+
         elif 'temperature' in query:
-            speak("Of which City?")
-            city_name = takeCommand().lower()
-            search = 'https://www.google.co.in/search?q={city_name}'
-            r = requests.get(url)
-            data = BeautifulSoup(r.text,"html.parser")
-            temp = data.find("div",class_="BNeawe").text
-            speak(f"Current Temperature in {city_name} is {temp}")
+            Temperature()
 
         elif 'activate how to do mode' in query:
             speak(f"How to Do mode is Activated. Please Tell me what you want to do?")            
