@@ -292,7 +292,7 @@ if __name__ == "__main__":
             print(message.sid)
             speak(f"Meassage has been sent Successfully")
 
-        elif 'call' in query:
+        '''elif 'call' in query:
             speak(f"What should I say in Call?")
             call_msg = takeCommand()
 
@@ -307,7 +307,7 @@ if __name__ == "__main__":
                     to='+919309906153'
                 )
             
-           speak("It's Done Dear...")
+           speak("It's Done Dear...")'''
 
 
 #####################EEEEEEEENNNNNNNNDDDDDDD##############################################
