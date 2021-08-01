@@ -240,7 +240,7 @@ if __name__ == "__main__":
                 return {
                     '+' : operator.add,
                     '-' : operator.sub,
-                    '*' : operator.mul,
+                    '×' : operator.mul,
                     '/' : operator.__truediv__,
                 } [op]
             def eval_binary_expr(op1, oper, op2):
@@ -273,44 +273,6 @@ if __name__ == "__main__":
                     speak(how_to[0].summary)
             except Exception as e:
                 speak(f"Sorry Dear, I'm not able to find this please try something different.")
-
-        elif 'send sms' in query:
-            speak(f"What should I say?")
-            msg = takeCommand()
-
-            from twilio.rest import Client
-            
-            account_sid = os.environ['AC8d467668f97b7d93cb058b1ec518199b']
-            auth_token = os.environ['8e30f52d67743adb77ad18e70fa6decb']
-            client = Client(account_sid, auth_token)
-
-            message = client.messages \
-                .create(
-                    body='{msg}',
-                    from_='+13235533946',
-                    to='+919309906153'
-                )
-
-            print(message.sid)
-            speak(f"Meassage has been sent Successfully")
-
-        '''elif 'call' in query:
-            speak(f"What should I say in Call?")
-            call_msg = takeCommand()
-
-            account_sid = os.environ['AC8d467668f97b7d93cb058b1ec518199b']
-            auth_token = os.environ['8e30f52d67743adb77ad18e70fa6decb']
-            client = Client(account_sid, auth_token)
-
-            message = client.calls \
-                .create(
-                    twiml='<Response><Say>{call_msg}</Say></Response>'
-                    from_='+13235533946',
-                    to='+919309906153'
-                )
-            
-           speak("It's Done Dear...")'''
-
 
 #####################EEEEEEEENNNNNNNNDDDDDDD##############################################
         speak("Anything other I can do for you?")
