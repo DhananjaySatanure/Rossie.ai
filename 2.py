@@ -14,11 +14,18 @@ import random
 import sys
 import instaloader
 import pyautogui
+import operator
+from bs4 import BeautifulSoup
+from wikipedia.wikipedia import search
+import pywikihow
+from pywikihow import search_wikihow
+import twilio
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
-
+rate = engine.getProperty('rate')
+engine.setProperty('rate', 180)
 
 def speak(audio):
     engine.say(audio)
@@ -36,7 +43,7 @@ def wishMe():
     else:
         speak("Good Evening!")  
 
-    speak("Hello Dear, I'm Roosie. Your Virtual Assistant. Please tell me how can I help you")       
+    speak("Hello Dear, I'm Roosie. Your Virtual Assistant. Please tell me how can I help you?")       
 
 def takeCommand():
 
@@ -64,7 +71,7 @@ def sendEmail(to, content):
     server.sendmail('notabletoday@gmail.com', to, content)
     server.close()
 
-########################################################################################
+#################SSSSSSSSSTTTTTTTTAAAAAAAAARRRRRTTTTTT#############################
 
 def news():
     main_url = 'https://newsapi.org/v2/top-headlines?country=in&apiKey=0e1d349cb47a4d0b9abca754ac83b595'
@@ -79,7 +86,7 @@ def news():
     for i in range (len(day)):
         speak(f"Today's, {day[1]} news is {head[1]}")
 
-########################################################################################
+##################EEEEENNNNNDDDDDDDDD#####################################
 
 if __name__ == "__main__":
     wishMe()
@@ -126,8 +133,8 @@ if __name__ == "__main__":
         elif 'open cricbuzz' in query:
             webbrowser.open("cricbuzz.com")
 
-        elif 'open google' in query:
-            speak("dear, What should I search on Google?")
+        elif 'open internet' in query or 'open browser' in query:
+            speak("Okay Dear, What should I search on Internet Browser?")
             cm = takeCommand().lower()
             webbrowser.open(f"{cm}")
 
@@ -168,11 +175,11 @@ if __name__ == "__main__":
             codePath = "C:\\Users\\AMEY JOJARE\\AppData\\Local\\Programs\\Microsoft VS Code"
             os.startfile(codePath)
 
-        elif 'stop listening' in query:
+        elif 'stop listening' in query or 'exit' in query:
             speak("Okay dear, Thanks for Using me. Good Bye!")
             sys.exit()
 
-############################################################################################
+#########################SSSSSTTTTTTTTAAAAAAARRRRTTTTT################################################
 
         elif 'close notepad' in query:
             speak("Okay dear, I'll Close Notepad")
@@ -218,7 +225,7 @@ if __name__ == "__main__":
             img.save(f"{ss_n}.jpg")
             speak(f"I'm done dear, Screenshot is Saved in Main Folder.")
 
-        '''elif 'calculate' in query:
+        elif 'calculate' in query or 'calculations' in query:
             r = sr.Recognizer()
             with sr.Microphone() as source:
                 speak(f"What you want to calculate? Say like: 2 plus 2")
@@ -229,12 +236,79 @@ if __name__ == "__main__":
             print(my_string)
             def get_operator_fn(op):
                 return {
-                    '+' : operator.add
-                    '-' : operator.sub
+                    '+' : operator.add,
+                    '-' : operator.sub,
+                    '*' : operator.mul,
+                    '/' : operator.__truediv__,
+                } [op]
+            def eval_binary_expr(op1, oper, op2):
+                op1,op2 = int(op1), int(op2)
+                return get_operator_fn(oper)(op1,op2)
+            speak("The Result is: ")
+            speak(eval_binary_expr(*(my_string.split())))
 
-                }'''
+        elif 'temperature' in query:
+            speak("Of which City?")
+            city_name = takeCommand().lower()
+            search = 'https://www.google.co.in/search?q={city_name}'
+            r = requests.get(url)
+            data = BeautifulSoup(r.text,"html.parser")
+            temp = data.find("div",class_="BNeawe").text
+            speak(f"Current Temperature in {city_name} is {temp}")
 
-        
+        elif 'activate how to do mode' in query:
+            speak(f"How to Do mode is Activated. Please Tell me what you want to do?")            
+            how = takeCommand()
+            try:
+                if "deactivate" in how:
+                    speak(f"Okay Dear, How to Do mode is Deactivated")
+                    break
+                else:
+                    max_results = 1
+                    how_to = search_wikihow(how, max_results)
+                    assert len(how_to) == 1
+                    how_to[0].print()
+                    speak(how_to[0].summary)
+            except Exception as e:
+                speak(f"Sorry Dear, I'm not able to find this please try something different.")
 
-############################################################################################
+        elif 'send sms' in query:
+            speak(f"What should I say?")
+            msg = takeCommand()
+
+            from twilio.rest import Client
+            
+            account_sid = os.environ['AC8d467668f97b7d93cb058b1ec518199b']
+            auth_token = os.environ['8e30f52d67743adb77ad18e70fa6decb']
+            client = Client(account_sid, auth_token)
+
+            message = client.messages \
+                .create(
+                    body='{msg}',
+                    from_='+13235533946',
+                    to='+919309906153'
+                )
+
+            print(message.sid)
+            speak(f"Meassage has been sent Successfully")
+
+        elif 'call' in query:
+            speak(f"What should I say in Call?")
+            call_msg = takeCommand()
+
+            account_sid = os.environ['AC8d467668f97b7d93cb058b1ec518199b']
+            auth_token = os.environ['8e30f52d67743adb77ad18e70fa6decb']
+            client = Client(account_sid, auth_token)
+
+            message = client.calls \
+                .create(
+                    twiml='<Response><Say>{call_msg}</Say></Response>'
+                    from_='+13235533946',
+                    to='+919309906153'
+                )
+            
+           speak("It's Done Dear...")
+
+
+#####################EEEEEEEENNNNNNNNDDDDDDD##############################################
         speak("Anything other I can do for you?")
