@@ -84,7 +84,7 @@ def news():
     for ar in articles:
         head.append(ar["title"])
     for i in range (len(day)):
-        speak(f"Today's, {day[1]} news is {head[1]}")
+        speak(f"Today's, {day[i]} news is {head[i]}")
 
 ##################EEEEENNNNNDDDDDDDDD#####################################
 
