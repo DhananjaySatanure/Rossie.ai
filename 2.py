@@ -101,11 +101,13 @@ if __name__ == "__main__":
             print(results)
             speak(results)
         
-        elif 'send email' in query:
-            try:  
+        elif 'send mail' in query:
+            try:
+                speak("To whom you want to send?")
+                email_id = input("Enter Recipient Email ID here: ")
                 speak("What should I say?")
                 content = takeCommand()
-                to = "ameyjojare@gmail.com"    
+                to = {email_id}
                 sendEmail(to, content)
                 speak("Email has been sent!")
             except Exception as e:
@@ -157,8 +159,8 @@ if __name__ == "__main__":
         elif 'open stackoverflow' in query:
             webbrowser.open("stackoverflow.com")
 
-        elif 'open whatsapp desktop' in query:
-            webbrowser.open("whatsappdesktop.com")         
+        # elif 'open whatsapp desktop' in query:
+        #     webbrowser.open("whatsappdesktop.com")
 
         elif 'play songs from my local computer' in query:
             music_dir = 'D:\\songs'
@@ -169,7 +171,7 @@ if __name__ == "__main__":
 
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")    
-            speak(f"Sir, the time is {strTime}")
+            speak(f"Dear, the time is {strTime}")
 
         elif 'open code' in query:
             codePath = "C:\\Users\\AMEY JOJARE\\AppData\\Local\\Programs\\Microsoft VS Code"
