@@ -180,7 +180,7 @@ if __name__ == "__main__":
             os.startfile(os.path.join(music_dir, rd))
 
         elif 'the time' in query:
-            strTime = datetime.datetime.now().strftime("%H:%M:%S")    
+            strTime = datetime.datetime.now().strftime("%H:%M:%S")  
             speak(f"Dear, the time is {strTime}")
 
         elif 'open code' in query:
@@ -230,11 +230,9 @@ if __name__ == "__main__":
                 pass
         
         elif 'screenshot' in query:
-            speak(f"Please tell me the name you would like to give for this Screenshot")
-            ss_n = takeCommand().lower()
-            speak(f"Great! Please Hold the screen for Few seconds, I'm taking the screenshot")
+            speak(f"Okay, Please Hold the screen for Few seconds, I'm taking the screenshot")
             img = pyautogui.screenshot()
-            img.save(f"{ss_n}.jpg")
+            img.save(f".jpg")
             speak(f"I'm done dear, Screenshot is Saved in Main Folder.")
 
         elif 'calculate' in query or 'calculations' in query:
@@ -286,6 +284,23 @@ if __name__ == "__main__":
                     speak(how_to[0].summary)
             except Exception as e:
                 speak(f"Sorry Dear, I'm not able to find this please try something different.")
+
+        elif "www" in final or "com" in final: #for opening a website on google........................................
+            try:
+                final = str(final)
+                sp = str(final.replace("open",""))
+                sp = str(sp.replace(" ",""))
+                sp = str(sp.replace("www.",""))
+                sp = str(sp.replace(".com",""))
+                sp1 = "opening "+sp+".com"
+                speak(sp1)
+                chrome_path = "C:\Program Files\Google\Chrome\Application\Chrome.exe"
+                webbrowser.register("chrome", None, webbrowser.BackgroundBrowser(chrome_path))
+                final = "https://www."+sp+".com"
+                print(final)
+                webbrowser.get("chrome").open_new_tab(final)
+            except:
+                speak("having some internal issue")
 
 #####################EEEEEEEENNNNNNNNDDDDDDD##############################################
         speak("Anything other I can do for you?")
