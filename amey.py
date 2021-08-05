@@ -208,5 +208,22 @@ if __name__ == "__main__":
         elif 'stop listening' in query:
             speak("Okay dear, Thanks for Using me. Good Bye!")
             sys.exit()
+            
+        elif "www" in query or "com" in query:
+            try:
+                final = str(final)
+                sp = str(final.replace("open",""))
+                sp = str(sp.replace(" ",""))
+                sp = str(sp.replace("www.",""))
+                sp = str(sp.replace(".com",""))
+                sp1 = "opening "+sp+".com"
+                speak(sp1)
+                chrome_path = "C:\Program Files\Google\Chrome\Application\Chrome.exe"
+                webbrowser.register("chrome", None, webbrowser.BackgroundBrowser(chrome_path))
+                final = "https://www."+sp+".com"
+                print(final)
+                webbrowser.get("chrome").open_new_tab(final)
+            except:
+                speak("having some internal issue")
 
         speak("okay, dear do you have any other Work?")
